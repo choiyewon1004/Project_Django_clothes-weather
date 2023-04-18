@@ -41,8 +41,6 @@ urlpatterns = [
 
     #옷 위젯 클릭시 넘어가는 화면 체크박스와 연동 시키는 부분
     path('combination/', views.combination),
-
-
 ]
 
 #이미지 파일 업로드 위해 추가 4월 15일 21:28

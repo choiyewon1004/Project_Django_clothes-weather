@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>project</title>
+    <title>clothes of today</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
     <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}"/>
     <!-- Font Awesome icons (free version)-->
@@ -29,6 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <link href="{% static 'css/font.css' %}" rel="stylesheet" />
     <link href="{% static 'css/search_bar.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/check_tab.css' %}" rel="stylesheet" />
 
     <style>
         .gradient-custom {
@@ -75,150 +76,120 @@
         .masthead:before{
             background-color: transparent;
         }
-
-
-
     </style>
 </head>
 
 
 <body>
-<!-- Background Video-->
-<!--새벽 작업 시 css 확인 위해서 만듬
-<video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" src="{% static 'assets/mp4/sunny.mp4' %}" type="video/mp4"></video>-->
+    <video id="video" class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" src="" type="video/mp4"></video>
+    <!--id = video 태그에 날씨에 따라 다른 날씨를 보여줌 -->
+    <!-- Masthead-->
+    <div class="masthead">
+        <div class="masthead-content text-white">
+            <div class="container-fluid px-4 px-lg-0">
+                <br><br>
+                <h1 style = "color : black;"id="title" class="lh-1 mb-4">clothes of today</h1>
+                <!-- 지도 부분 -->
+                <!-- kakao API -->
+                <script type="text/javascript"
+                        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e443c812207cc3e160a9117574e67b76&libraries=services,clusterer"></script>
+                <div>
+                    <p></p>
+                    <table style="margin-left:auto;margin-right:auto;">
+                        <tr>
+                            <td><input style="border-radius: 10px; width:450px;height:30px;" type="text" name="detailAddress" id="address" placeholder="원하는 지역을 입력하세요."></td>
+                            <td>
+                                <button type="button" class="btn" id="searchBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-search" viewBox="0 0 16 16">
+                                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <p></p>
+                </div>
 
-<video id="video" class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" src="" type="video/mp4"></video>
-<!--id = video 태그에 날씨에 따라 다른 날씨를 보여줌 -->
+                <div class="row input-group-newsletter">
+                    <div id="grid">
+
+                        <!--map-->
+                        <div id="map"
+                             style="width: 500px; height: 160px; margin-right:10px; margin-bottom: 10px; border: 1px solid rgb(207, 207, 207); border-radius: 30px; margin-top: 20px; <!--box-shadow: rgb(207, 207, 207) 0px 0px 13px;--> position: relative; overflow: hidden; background: url(&quot;https://t1.daumcdn.net/mapjsapi/images/bg_tile.png&quot;);">
+                        </div>
+
+                        <!-- weather info -->
+
+                        <div id="card" class="card" style="height : 25opx;color: #4B515D; border-radius: 35px;">
+                            <div  id="contents" class="card-body p-4" >  </div>
+                        </div>
 
 
+                        <!-- recommend clothes -->
+                        <div class="card" style="color: #4B515D; border-radius: 35px;">
+                            <form mehtod="get" action="select_clothes.html">
+                                <div class="tabs">
+                                    <input id="top" type="radio" name="tab_item" checked>
+                                    <label class="tab_item" for="top">상의</label>
+                                    <input id="bottom" type="radio" name="tab_item">
+                                    <label class="tab_item" for="bottom">하의</label>
+                                    <input id="outer" type="radio" name="tab_item">
+                                    <label class="tab_item" for="outer">아우터</label>
 
-<!-- Masthead-->
-<div class="masthead">
-    <div class="masthead-content text-white">
-        <div class="container-fluid px-4 px-lg-0">
-            <h1 style="border: 1px solid rgb(207, 207, 207); border-radius: 15px;" id="title" class="lh-1 mb-4">Weather is Clothes</h1>
-           <!-- <p class="mb-5">날씨에 맞는 옷을 추천받으세요!</p>-->
-            <!-- 지도 부분 -->
-            <!-- kakao API -->
-            <script type="text/javascript"
-                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e443c812207cc3e160a9117574e67b76&libraries=services,clusterer"></script>
-            <div>
-                <p></p>
-                <table style="margin-left:auto;margin-right:auto;">
-                    <tr>
-                        <td><input style="border-radius: 10px;" type="text" name="detailAddress" id="address"></td>
-                        <td>
-                            <button type="button" class="btn" id="searchBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-search" viewBox="0 0 16 16">
-                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                </svg>
-                            </button>
-
-                        </td>
-                    </tr>
-
-                </table>
-                <p></p>
-            </div>
-            <div class="row input-group-newsletter">
-
-                <div id="grid">
-                    <div id="map"
-                         style="width: 500px; height: 160px; margin-right:10px; margin-bottom: 10px; border: 1px solid rgb(207, 207, 207); border-radius: 30px; margin-top: 20px; <!--box-shadow: rgb(207, 207, 207) 0px 0px 13px;--> position: relative; overflow: hidden; background: url(&quot;https://t1.daumcdn.net/mapjsapi/images/bg_tile.png&quot;);">
-                    </div>
-
-                    <div id="card" class="card" style="color: #4B515D; border-radius: 35px;">
-                        <div  id="contents" class="card-body p-4">
-                        <!-- javascript 에서 비동기 통신으로 보내기 때문에 주석처리 함. 나중에 필요할 때 사용
-                            <div class="d-flex">
-                                <h6 class="flex-grow-1"></h6>
-                                <h6>{{weather.time}}</h6>
-                            </div>
-
-                            <div class="d-flex flex-column text-center mt-5 mb-4">
-                                <h6 class="display-4 mb-0 font-weight-bold" style="color: #1C2331;">{{weather.tmp}}°C </h6>
-                                <span class="small" style="color: #868B94">{{weather.sky}}</span>
-                            </div>
-
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1" style="font-size: 1rem;">
-                                    <div><i class="fas fa-wind fa-fw" style="color: #868B94;"></i>
-                                        <span class="ms-1">풍속:{{weather.wind}}m/s</span>
+                                    <div class="tab_content" id="top_content" >
+                                        <label><input type="checkbox" name="select_top" value="shirt_short"> 반팔 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt_long"> 긴팔 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt_sweat"> 맨투맨 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt"> 스웨터 </label>
+                                        <label><input type="checkbox" name="select_top" value="blous"> 블라우스 </label>
+                                        <label><input type="checkbox" name="select_top" value="onepice"> 원피스 </label>
+                                        <label><input type="checkbox" name="select_top" value="neet"> 니트 </label>
                                     </div>
-                                    <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i>
-                                        <span class="ms-1">습도:{{weather.hum}}% </span>
+                                    <div class="tab_content" id="bottom_content">
+                                        <label><input type="checkbox" name="select_bottom" value="jeans"> 청바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="pants_winter"> 겨울바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="pants_summer"> 여름바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="skert"> 치마 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="pants_cago"> 카고바지 </label>
                                     </div>
-                                    <div>
-                                        <img src="../static/img/{{weather.img}}"
-                                             width="100px">
+                                    <div class="tab_content" id="outer_content">
+                                        <label><input type="checkbox" name="select_outer" value="kardigun"> 가디건 </label>
+                                        <label><input type="checkbox" name="select_outer" value="jumper"> 점퍼 </label>
+                                        <label><input type="checkbox" name="select_outer" value="jacket"> 재킷 </label>
+                                        <label><input type="checkbox" name="select_outer" value="coat"> 코트 </label>
+                                        <label><input type="checkbox" name="select_outer" value="padding"> 패딩 </label>
                                     </div>
                                 </div>
-                            </div>
-                        -->
+                                <p>
+                                    <table width="100%">
+                                        <tr>
+                                            <td style="width=50%">
+                                                <input type="submit" value=" 검색">
+                                            </td>
+                                            <td style="width=50%">
+                                                <input type="reset" value="초기화">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </p>
+                            </form>
                         </div>
+
+
                     </div>
-
-                    <div class="card" style="color: #4B515D; border-radius: 35px;">
-                        <div  id="contents2" class="card-body p-4">
-                            <!--<div>
-                                <a href="../combination/"><img onclick="../combination/" src="../static/img/4월_14일.jpg" width='100px'></a>
-                            </div>-->
-                            <div>
-                                <a href="../combination/"><img class="cloth" src="../static/img/4월_14일_2.jpg"></a>
-                            </div>
-                            <div>
-                                <a href="../combination/"><img class="cloth" src="../static/img/4월_14일_3.jpg" style="margin-right:5px; margin-left:5px;"></a>
-                            </div>
-                            <div>
-                                <a href="../combination/"><img class="cloth" src="../static/img/2월_3일.jpg"></a>
-                            </div>
-
-                        </div>
-                    </div>
-
-                <!-- div grid 끝 부분 -->
                 </div>
 
             </div>
-
+        </div>
     </div>
-    <!-- 기존의 옷 체크박스 부분 필요하면 사용하자<p></p>
-    <div class="clothes_type">
-        <table>
-            <tr>
-                체크박스
-            </tr>
-            <tr>
-                체크박스
-            </tr>
-            <tr>
-                체크박스
-            </tr>
-            <tr>
-                체크박스
-            </tr>
-            <tr>
-                <td rowspan="6">
-                    <button type="submit" class="btn mb-3 btn-round btn-twitter text-left w-100">검색
-                    </button>
-                </td>
-            </tr>
-        </table>
-    </div>
-옷 체크박스 부분 끝 -->
 
-</div>
-</div>
-</div>
- </div>
 
 <!-- Social Icons-->
 <!-- For more icon options, visit https://fontawesome.com/icons?d=gallery&p=2&s=brands-->
 <div class="social-icons">
     <div class="d-flex flex-row flex-lg-column justify-content-center align-items-center h-100 mt-3 mt-lg-0">
-
         <a class="btn btn-dark m-3" href="../logout/"><i class="bi bi-box-arrow-right"></i></a>
-
     </div>
 </div>
 <!-- Bootstrap core JS-->
@@ -408,8 +379,6 @@
 
         console.log('위치 검색 확인 후 공백 확인',LatLng)
 
-
-
     });
 
     //-----------------------------------------------------------
@@ -448,14 +417,15 @@
                         console.log(sky[0]);
                         document.getElementById('video').src=video_info()
 
+
                         /*txt += "<div class='d-flex'><h6 class='flex-grow-1'></h6><h6>"+weather.time+"</h6></div>"*/
                         txt += "<div class='d-flex'><h6 class='flex-grow-1'></h6><h6>"+weather.time+"</h6></div>"
 
                         /*txt += "<div class='d-flex flex-column text-center mt-5 mb-4'><h6 class='display-4 mb-0 font-weight-bold' style='color: #1C2331;'>"+weather.tmp+"°C</h6><span class='small' style='color: #868B94'>"+weather.sky+"</span></div>"*/
-                        txt += "<div class='d-flex flex-column text-center mt-5 mb-4'><h6 class='display-4 mb-0 font-weight-bold' style='color: #1C2331;'>"+weather.tmp+"°C </h6><span class='small' style='color: #868B94'>"+weather.sky+"</span></div>"
+                        txt += "<div class='d-flex flex-column text-center mt-5 mb-4'><h6 class='display-4 mb-0 font-weight-bold' style='color: #1C2331;'>"+weather.tmp+"°C </h6><span class='small' style='color: #868B94; font-size:18px;'>"+weather.sky+"</span></div>"
 
-                        /*txt += "<div class='d-flex align-items-center'><div class='flex-grow-1' style='font-size: 1rem;'><div><i class='fas fa-wind fa-fw' style='color: #868B94;'></i><span class='ms-1'>풍속:"+weather.wind+"m/s</span> </div><div><i class='fas fa-tint fa-fw' style='color: #868B94;'></i><span class='ms-1'>습도:"+weather.hum+"% </span></div><div><img src='../static/img/"+weather.img+"' width='100px'></div></div></div>"*/
-                        txt += "<div class='d-flex align-items-center'><div class='flex-grow-1' style='font-size: 1rem;'><div><i class='fas fa-wind fa-fw' style='color: #868B94;'></i><span class='ms-1'>풍속:"+weather.wind+"m/s</span></div><div><i class='fas fa-tint fa-fw' style='color: #868B94;'></i><span class='ms-1'>강수확률:"+weather.percent+"% </span></div><div><i style='color: #868B94;'></i> <span class='ms-1'>습도:"+weather.hum+"%</span></div><div><i style='color: #868B94;'></i><span class='ms-1'>최고온도:"+weather.max+"°C</span></div><div><i style='color: #868B94;'></i><span class='ms-1'>최저온도:"+weather.min+"°C</span></div></div></div>"
+                        /*txt += "<div class='d-flex align-items-center'><div class='flex-grow-1' style='font-size: 20px;'><div><i class='fas fa-wind fa-fw' style='color: #868B94;'></i><span class='ms-1'>풍속:"+weather.wind+"m/s</span> </div><div><i class='fas fa-tint fa-fw' style='color: #868B94;'></i><span class='ms-1'>습도:"+weather.hum+"% </span></div><div><img src='../static/img/"+weather.img+"' width='100px'></div></div></div>"*/
+                        txt += "<div class='d-flex align-items-center'><div class='flex-grow-1' style='font-size: 20px; line-height: 25px;'><div><i class='fas fa-wind fa-fw' style='color: #868B94;'></i><span class='ms-1'>풍속:"+weather.wind+"m/s</span></div><div><i class='fas fa-tint fa-fw' style='color: #868B94;'></i><span class='ms-1'>강수확률:"+weather.percent+"% </span></div><div><i style='color: #868B94;'></i> <span class='ms-1'>습도:"+weather.hum+"%</span></div><div><i style='color: #868B94;'></i><span class='ms-1'>최고온도:"+weather.max+"°C</span></div><div><i style='color: #868B94;'></i><span class='ms-1'>최저온도:"+weather.min+"°C</span></div></div></div>"
                     })
                    /*alert(txt)*/
                     //결과 다시 합쳐서 id=contents에 html형식으로 출력
