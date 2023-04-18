@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <!-- jquery 사용 -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>project</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;display=swap"
+          rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'css/styles_d.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/login_d.css' %}" rel="stylesheet" />
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="{% static 'css/font.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/search_bar.css' %}" rel="stylesheet" />
+
+    <style>
+        .gradient-custom {
+            /* fallback for old browsers */
+            background: #ffffff;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 236, 210, 1));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 236, 210, 1))
+        }
+
+        img {
+            float: right;
+        }
+
+        .carousel-indicators li {
+            background-color: #282828;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+        #grid{
+            display:grid;
+            grid-template-rows: 1fr 2fr 1fr;
+        }
+
+        #card{
+            margin-bottom : 20px;
+        }
+
+        #title{
+            text-align : center;
+        }
+
+        .cloth{
+            width : 150px;
+            height : 150px;
+            border-radius: 10px;
+        }
+
+
+        .masthead:before{
+            background-color: transparent;
+        }
+
+
+
+    </style>
+</head>
+
+
+<body>
+<!-- Background Video-->
+<!--새벽 작업 시 css 확인 위해서 만듬
+<video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" src="{% static 'assets/mp4/sunny.mp4' %}" type="video/mp4"></video>-->
+
+<video id="video" class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" src="" type="video/mp4"></video>
+<!--id = video 태그에 날씨에 따라 다른 날씨를 보여줌 -->
+
+
+
+<!-- Masthead-->
+<div class="masthead">
+    <div class="masthead-content text-white">
+        <div class="container-fluid px-4 px-lg-0">
+            <h1 style="border: 1px solid rgb(207, 207, 207); border-radius: 15px;" id="title" class="lh-1 mb-4">Weather is Clothes</h1>
+           <!-- <p class="mb-5">날씨에 맞는 옷을 추천받으세요!</p>-->
+            <!-- 지도 부분 -->
+            <!-- kakao API -->
+            <script type="text/javascript"
+                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e443c812207cc3e160a9117574e67b76&libraries=services,clusterer"></script>
+            <div>
+                <p></p>
+                <table style="margin-left:auto;margin-right:auto;">
+                    <tr>
+                        <td><input style="border-radius: 10px;" type="text" name="detailAddress" id="address"></td>
+                        <td>
+                            <button type="button" class="btn" id="searchBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-search" viewBox="0 0 16 16">
+                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                            </button>
+
+                        </td>
+                    </tr>
+
+                </table>
+                <p></p>
+            </div>
+            <div class="row input-group-newsletter">
+
+                <div id="grid">
+                    <div id="map"
+                         style="width: 500px; height: 160px; margin-right:10px; margin-bottom: 10px; border: 1px solid rgb(207, 207, 207); border-radius: 30px; margin-top: 20px; <!--box-shadow: rgb(207, 207, 207) 0px 0px 13px;--> position: relative; overflow: hidden; background: url(&quot;https://t1.daumcdn.net/mapjsapi/images/bg_tile.png&quot;);">
+                    </div>
+
+                    <div id="card" class="card" style="color: #4B515D; border-radius: 35px;">
+                        <div  id="contents" class="card-body p-4">
+                        <!-- javascript 에서 비동기 통신으로 보내기 때문에 주석처리 함. 나중에 필요할 때 사용
+                            <div class="d-flex">
+                                <h6 class="flex-grow-1"></h6>
+                                <h6>{{weather.time}}</h6>
+                            </div>
+
+                            <div class="d-flex flex-column text-center mt-5 mb-4">
+                                <h6 class="display-4 mb-0 font-weight-bold" style="color: #1C2331;">{{weather.tmp}}°C </h6>
+                                <span class="small" style="color: #868B94">{{weather.sky}}</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1" style="font-size: 1rem;">
+                                    <div><i class="fas fa-wind fa-fw" style="color: #868B94;"></i>
+                                        <span class="ms-1">풍속:{{weather.wind}}m/s</span>
+                                    </div>
+                                    <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i>
+                                        <span class="ms-1">습도:{{weather.hum}}% </span>
+                                    </div>
+                                    <div>
+                                        <img src="../static/img/{{weather.img}}"
+                                             width="100px">
+                                    </div>
+                                </div>
+                            </div>
+                        -->
+                        </div>
+                    </div>
+
+                    <div class="card" style="color: #4B515D; border-radius: 35px;">
+                        <div  id="contents2" class="card-body p-4">
+                            <!--<div>
+                                <a href="../combination/"><img onclick="../combination/" src="../static/img/4월_14일.jpg" width='100px'></a>
+                            </div>-->
+                            <div>
+                                <a href="../combination/"><img class="cloth" src="../static/img/4월_14일_2.jpg"></a>
+                            </div>
+                            <div>
+                                <a href="../combination/"><img class="cloth" src="../static/img/4월_14일_3.jpg" style="margin-right:5px; margin-left:5px;"></a>
+                            </div>
+                            <div>
+                                <a href="../combination/"><img class="cloth" src="../static/img/2월_3일.jpg"></a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                <!-- div grid 끝 부분 -->
+                </div>
+
+            </div>
+
+    </div>
+    <!-- 기존의 옷 체크박스 부분 필요하면 사용하자<p></p>
+    <div class="clothes_type">
+        <table>
+            <tr>
+                체크박스
+            </tr>
+            <tr>
+                체크박스
+            </tr>
+            <tr>
+                체크박스
+            </tr>
+            <tr>
+                체크박스
+            </tr>
+            <tr>
+                <td rowspan="6">
+                    <button type="submit" class="btn mb-3 btn-round btn-twitter text-left w-100">검색
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+옷 체크박스 부분 끝 -->
+
+</div>
+</div>
+</div>
+ </div>
+
+<!-- Social Icons-->
+<!-- For more icon options, visit https://fontawesome.com/icons?d=gallery&p=2&s=brands-->
+<div class="social-icons">
+    <div class="d-flex flex-row flex-lg-column justify-content-center align-items-center h-100 mt-3 mt-lg-0">
+
+        <a class="btn btn-dark m-3" href="../logout/"><i class="bi bi-box-arrow-right"></i></a>
+
+    </div>
+</div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<!-- * *                               SB Forms JS                               * *-->
+<!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+
+<script>
+    const date = new Date();
+	var month = date.getMonth() + 1;
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 7 // 지도의 확대 레벨
+        };
+
+    // 지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    // 마커 리스트
+    var markers = [];
+    var LatLng = [];
+    var sky = [];
+
+
+
+
+
+    // 마커 클러스터링
+    var clusterer = new kakao.maps.MarkerClusterer({
+        map: map,
+        markers: markers,
+        gridSize: 35,
+        averageCenter: true,
+        minLevel: 6,
+        disableClickZoom: true,
+        styles: [{
+            width: '53px', height: '52px',
+            background: 'url(cluster.png) no-repeat',
+            color: '#fff',
+            textAlign: 'center',
+            lineHeight: '54px'
+        }]
+    });
+
+
+    // 지도 위에 마커 생성 함수--------------------------------------
+    function displayMarker(locPosition) {
+
+        // 마커를 생성합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: locPosition
+        });
+
+        // 생성된 마커를 클러스터에 추가
+        clusterer.addMarker(marker);
+
+        let callback = function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                // 추출한 도로명 주소를 해당 input의 value값으로 적용
+                $('#address').val(result[0].road_address.address_name);
+            }
+        }
+
+        // 지도 밑에 출력할 내용
+        // 현재 마커가 있는 곳의 경위도 좌표를 출력
+        // document.getElementById("latlng_coord").innerText = locPosition;
+
+        // 지도 중심좌표를 접속위치로 변경합니다
+        map.setCenter(locPosition);
+    }
+
+    //----------------------------------------------------------------------
+
+
+    // 현재위치 표시하기
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+
+            var lat = position.coords.latitude,
+                lon = position.coords.longitude;
+
+            LatLng.push(lat)
+            LatLng.push(lon)
+
+            var locPosition = new kakao.maps.LatLng(lat, lon)
+
+            // 마커 표시
+            displayMarker(locPosition);
+
+
+//추가부분 안넣음 my pjt 참고
+            console.log('현재위치 위경도:', LatLng)
+
+            weatherInfo()
+            console.log('현재 위치 사용 후 공백 확인 : ', LatLng)
+
+            setTimeout(function() {
+                clothRecommend()
+            }, 2000);
+       });
+
+
+    }
+    else
+    {
+
+        var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+            message = 'geolocation을 사용할 수 없어요'
+
+        displayMarker(locPosition);
+    }
+
+
+    //----------------------------------------------------------
+    $('#searchBtn').click(function () {
+        // 버튼을 click했을때
+        // 마커 저장된 클러스터러 클리어
+        clusterer.clear();
+
+        sky = [];
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch($('#address').val(), function (result, status) {
+
+
+            // 정상적으로 검색이 완료됐으면
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+
+                // 추출한 좌표를 통해 도로명 주소 추출
+                let lat = result[0].y;
+                let lng = result[0].x;
+
+                LatLng.push(lat)
+                LatLng.push(lng)
+                console.log('검색 주소 위경도:', LatLng)
+
+                getAddr(lat, lng);
+
+                //주소 변수화
+                var address = document.getElementById('address').value;
+                console.log('주소 변수:', address)
+
+                function getAddr(lat, lng) {
+                    let geocoder = new kakao.maps.services.Geocoder();
+
+
+                    let coord = new kakao.maps.LatLng(lat, lng);
+                    callback = function (result, status) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            // 추출한 도로명 주소를 해당 input의 value값으로 적용
+                            $('#address').val(result[0].road_address.address_name);
+
+                        }
+
+                    }
+
+                    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+
+                }
+
+
+                // 마커 생성 함수 사용
+                displayMarker(coords);
+
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+            }
+        });
+        ////delay settimeout javascript 혹시 안됨녀
+<!-------- 비동기 통신 구현 -->
+        setTimeout(function() {
+            weatherInfo()
+        }, 1000);
+
+        console.log('위치 검색 확인 후 공백 확인',LatLng)
+
+
+
+    });
+
+    //-----------------------------------------------------------
+    // 엔터로 입력 기능 구현
+    $(document).ready(function () {
+        $("#address").keyup(function (event) {
+            if (event.which === 13) {
+                $("#searchBtn").click();
+            }
+        });
+    });
+
+
+     function weatherInfo() {
+		/*alert(LatLng[0]+" , "+LatLng[1])*/
+
+		//ajax
+
+            $.ajax({
+                url: '../searchWeather/',
+                type: 'post',
+                data: {
+                    'csrfmiddlewaretoken' : '{{ csrf_token }}' ,
+                    lat : LatLng[0] ,
+                    lng : LatLng[1],
+                },
+                dataType : 'json',
+                success : function(lst) {
+                  /*  alert('call back success ^*^') */
+                    $('#contents').empty()
+                    var txt = ''
+                    //jquery each 함수
+                    //function 이하에서 index 배열의 인덱스 / 두번째 매개변수는 값
+                    $.each(lst, function(index, weather) {
+                        sky.push(weather.sky);
+                        console.log(sky[0]);
+                        document.getElementById('video').src=video_info()
+
+                        /*txt += "<div class='d-flex'><h6 class='flex-grow-1'></h6><h6>"+weather.time+"</h6></div>"*/
+                        txt += "<div class='d-flex'><h6 class='flex-grow-1'></h6><h6>"+weather.time+"</h6></div>"
+
+                        /*txt += "<div class='d-flex flex-column text-center mt-5 mb-4'><h6 class='display-4 mb-0 font-weight-bold' style='color: #1C2331;'>"+weather.tmp+"°C</h6><span class='small' style='color: #868B94'>"+weather.sky+"</span></div>"*/
+                        txt += "<div class='d-flex flex-column text-center mt-5 mb-4'><h6 class='display-4 mb-0 font-weight-bold' style='color: #1C2331;'>"+weather.tmp+"°C </h6><span class='small' style='color: #868B94'>"+weather.sky+"</span></div>"
+
+                        /*txt += "<div class='d-flex align-items-center'><div class='flex-grow-1' style='font-size: 1rem;'><div><i class='fas fa-wind fa-fw' style='color: #868B94;'></i><span class='ms-1'>풍속:"+weather.wind+"m/s</span> </div><div><i class='fas fa-tint fa-fw' style='color: #868B94;'></i><span class='ms-1'>습도:"+weather.hum+"% </span></div><div><img src='../static/img/"+weather.img+"' width='100px'></div></div></div>"*/
+                        txt += "<div class='d-flex align-items-center'><div class='flex-grow-1' style='font-size: 1rem;'><div><i class='fas fa-wind fa-fw' style='color: #868B94;'></i><span class='ms-1'>풍속:"+weather.wind+"m/s</span></div><div><i class='fas fa-tint fa-fw' style='color: #868B94;'></i><span class='ms-1'>강수확률:"+weather.percent+"% </span></div><div><i style='color: #868B94;'></i> <span class='ms-1'>습도:"+weather.hum+"%</span></div><div><i style='color: #868B94;'></i><span class='ms-1'>최고온도:"+weather.max+"°C</span></div><div><i style='color: #868B94;'></i><span class='ms-1'>최저온도:"+weather.min+"°C</span></div></div></div>"
+                    })
+                   /*alert(txt)*/
+                    //결과 다시 합쳐서 id=contents에 html형식으로 출력
+                    $('#contents').html(txt)
+                    LatLng = [];
+
+                }
+
+            })
+	    }
+        
+
+        function video_info() {
+         /*   alert('video_info()작동')*/
+            if (sky[0] == '구름많음')
+            {
+                video_src = '{% static 'assets/mp4/weather_video.mp4' %}'
+            }
+            else if (sky[0] == '흐림')
+            {
+                video_src = '{% static 'assets/mp4/흐림.mp4' %}'
+            }
+            else
+            {
+                video_src = '{% static 'assets/mp4/sunny.mp4' %}'
+            }
+            return video_src;
+        }
+
+	    function clothRecommend() {
+		/*month 원래 위치 */
+	/*	alert(month);*/
+
+		//ajax
+
+            $.ajax({
+                url: '../clothRecommend/',
+                type: 'post',
+                data: {
+                    'csrfmiddlewaretoken' : '{{ csrf_token }}' ,
+                    month : month ,
+
+                },
+                dataType : 'json',
+                success : function(lst) {
+                 /*   alert('call back success ^*^')
+
+                    $('#contents2').empty()
+                    var txt = ''
+                    //jquery each 함수
+                    //function 이하에서 index 배열의 인덱스 / 두번째 매개변수는 값
+                    $.each(lst, function(index, cloth) {
+                        txt += "<div><a href='../combination/'><img class='cloth' src='../static/img/4월_14일_2.jpg'></a></div>"
+                        txt += "<div><a href='../combination/'><img class='cloth' src='../static/img/4월_14일_3.jpg' style='margin-right:5px; margin-left:5px;'></a></div>"
+                        txt += "<div><a href='../combination/'><img class='cloth' src='../static/img/2월_3일.jpg'></a></div>"
+
+
+
+                    })
+                   alert(txt)
+                    //결과 다시 합쳐서 id=contents2에 html형식으로 출력
+                    $('#contents2').html(txt)
+*/
+
+                }
+
+            })
+	    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>project</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;display=swap" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles_d.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/login_d.css' %}" rel="stylesheet" />
+         <!-- font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+        <link href="{% static 'css/font.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/search_bar.css' %}" rel="stylesheet" />
+     <script type="text/javascript"
+                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e443c812207cc3e160a9117574e67b76&libraries=services,clusterer"></script>
+    </head>
+
+
+    <body>
+        <!-- Background Video-->
+        <video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop"><source src="{% static 'assets/mp4/bg.mp4' %}" type="video/mp4" /></video>
+        <!-- Masthead-->
+        <div class="masthead">
+          <div class="login-wrap">
+                <div class="login-html">
+                    <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">로그인</label>
+                    <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">회원가입</label>
+
+
+
+
+
+                    <div class="login-form">
+                        <!-- 로그인 부분-->
+
+                        <form action="../login/" method="post">
+                        {% csrf_token %}
+                            <div class="sign-in-htm">
+
+                                    <div class="group">
+                                        <label for="login_id" class="label">ID</label>
+                                        <input name="login_id" id="login_id" type="text" class="input">
+                                    </div>
+                                    <div class="group">
+                                        <label for="login_password" class="label">Password</label>
+                                        <input name="login_password" id="login_password" type="password" class="input" data-type="password">
+                                    </div>
+                                    <div class="group">
+                                        <input type="submit" class="button" value="Sign In">
+                                    </div>
+
+                            </div>
+                        </form>
+                        <!-- 로그인 부분-->
+
+                        <!-- 회원가입 부분-->
+                        <form action="../join/" method="post">
+                            {% csrf_token %}
+                        <div class="sign-up-htm">
+                            <div class="group">
+                                <label for="join_id" class="label">ID</label>
+                                <input name="join_id" id="join_id" type="text" class="input">
+                            </div>
+                            <div class="group">
+                                <label for="join_password" class="label">Password</label>
+                                <input name="join_password" id="join_password" type="password" class="input" data-type="password">
+                            </div>
+                            <div class="group">
+                                <label for="join_name" class="label">NAME</label>
+                                <input name="join_name" id="join_name" type="text" class="input">
+                            </div>
+                            <div class="group">
+                                <input type="submit" class="button" value="Sign Up">
+                            </div>
+                            <div class="hr"></div>
+                            <div class="foot-lnk">
+                                <label for="tab-1">이미 회원이신가요?</a></label>
+                            </div>
+                        </div>
+                        </form>
+                        <!-- 회원가입 부분-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="social-icons">
+
+            <div class="d-flex flex-row flex-lg-column justify-content-center align-items-center h-100 mt-3 mt-lg-0">
+                <!-- home 화면 icon 나중에 필요하면 살리자
+                <a class="btn btn-dark m-3" href="/home/index"><i class="bi bi-house-door-fill"></i></a>
+                home 화면 icon 끝-->
+                <a class="btn btn-dark m-3" href="#!"><i class="bi bi-info-lg"></i></a>
+            </div>
+        </div>
+
+
+    </body>
+</html>
