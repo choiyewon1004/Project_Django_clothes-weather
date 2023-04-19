@@ -38,6 +38,7 @@ urlpatterns = [
     #옷 추천 부분
     #검색하면 데이터베이스에서 날짜에 맞는 옷을 비동기 통신으로 전달
     path('clothRecommend/', views.clothRecommend),
+    path('recommend_clothes/', views.recommend_clothes),
 
     #옷 위젯 클릭시 넘어가는 화면 체크박스와 연동 시키는 부분
     path('combination/', views.combination),
