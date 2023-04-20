@@ -127,8 +127,7 @@
 
                         <!-- recommend clothes -->
                         <div class="card" style="color: #4B515D; border-radius: 35px;">
-                            <form mehtod="POST" action="/recommend_clothes">
-                                {% csrf_token %}
+                            <form mehtod="GET" action="/recommend_clothes">
                                 <div class="tabs">
                                     <input id="top" type="radio" name="tab_item" checked>
                                     <label class="tab_item" for="top">상의</label>
@@ -138,44 +137,37 @@
                                     <label class="tab_item" for="outer">아우터</label>
 
                                     <div class="tab_content" id="top_content" >
-                                        <label><input type="checkbox" id="shirt_short" value="shirt_short" > 반팔 </label>
-                                        <label><input type="checkbox" id="shirt_long" value="shirt_long" > 긴팔 </label>
-                                        <label><input type="checkbox" id="shirt_sweat" value="shirt_sweat" > 맨투맨 </label>
-                                        <label><input type="checkbox" id="shirt" value="shirt" > 스웨터 </label>
-                                        <label><input type="checkbox" id="blous" value="blous" > 블라우스 </label>
-                                        <label><input type="checkbox" id="onepice" value="onepice"> 원피스 </label>
-                                        <label><input type="checkbox" id="neet" value="neet" > 니트 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt_short"> 반팔 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt_long"> 긴팔 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt_sweat"> 맨투맨 </label>
+                                        <label><input type="checkbox" name="select_top" value="shirt"> 스웨터 </label>
+                                        <label><input type="checkbox" name="select_top" value="blous"> 블라우스 </label>
+                                        <label><input type="checkbox" name="select_top" value="onepice"> 원피스 </label>
+                                        <label><input type="checkbox" name="select_top" value="neet"> 니트 </label>
                                     </div>
                                     <div class="tab_content" id="bottom_content">
-                                        <label><input type="checkbox" id="jeans" value="jeans" > 청바지 </label>
-                                        <label><input type="checkbox" id="pants_winter" value="pants_winter" > 겨울바지 </label>
-                                        <label><input type="checkbox" id="pants_summer" value="pants_summer" > 여름바지 </label>
-                                        <label><input type="checkbox" id="skert" value="skert" > 치마 </label>
-                                        <label><input type="checkbox" id="pants_cago" value="pants_cago"> 카고바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="jeans"> 청바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="pants_winter"> 겨울바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="pants_summer"> 여름바지 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="skert"> 치마 </label>
+                                        <label><input type="checkbox" name="select_bottom" value="pants_cago"> 카고바지 </label>
                                     </div>
                                     <div class="tab_content" id="outer_content">
-                                        <label><input type="checkbox" id="kardigun" value="kardigun"> 가디건 </label>
-                                        <label><input type="checkbox" id="jumper" value="jumper"> 점퍼 </label>
-                                        <label><input type="checkbox" id="jacket" value="jacket" > 재킷 </label>
-                                        <label><input type="checkbox" id="coat" value="coat" > 코트 </label>
-                                        <label><input type="checkbox" id="padding" value="padding" > 패딩 </label>
+                                        <label><input type="checkbox" name="select_outer" value="kardigun"> 가디건 </label>
+                                        <label><input type="checkbox" name="select_outer" value="jumper"> 점퍼 </label>
+                                        <label><input type="checkbox" name="select_outer" value="jacket"> 재킷 </label>
+                                        <label><input type="checkbox" name="select_outer" value="coat"> 코트 </label>
+                                        <label><input type="checkbox" name="select_outer" value="padding"> 패딩 </label>
                                     </div>
-
                                 </div>
-
                                 <p>
                                     <table width="100%">
                                         <tr>
                                             <td style="width=50%">
-                                                <input type="submit" id="clothes_submit" value=" 검색">
+                                                <input type="submit" value=" 검색">
                                             </td>
                                             <td style="width=50%">
                                                 <input type="reset" value="초기화">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div id='choose_result'></div>
                                             </td>
                                         </tr>
                                     </table>
@@ -211,26 +203,6 @@
 
 
 <script>
-    var shirt_short = $('#shirt_short').is(':checked');
-    var shirt_long = $('#shirt_long').is(':checked');
-    var shirt_sweat = $('#shirt_sweat').is(':checked');
-    var shirt = $('#shirt').is(':checked');
-    var blous = $('#blous').is(':checked');
-    var onepice = $('#onepice').is(':checked');
-    var neet = $('#neet').is(':checked');
-    var jeans = $('#jeans').is(':checked');
-    var pants_winter = $('#pants_winter').is(':checked');
-    var pants_summer = $('#pants_summer').is(':checked');
-    var skert = $('#skert').is(':checked');
-    var pants_cago = $('#pants_cago').is(':checked');
-    var kardigun = $('#kardigun').is(':checked');
-    var jumper = $('#jumper').is(':checked');
-    var jacket = $('#jacket').is(':checked');
-    var coat = $('#coat').is(':checked');
-    var padding = $('#padding').is(':checked');
-    console.log(
-
-
     const date = new Date();
 	var month = date.getMonth() + 1;
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -247,6 +219,10 @@
     var markers = [];
     var LatLng = [];
     var sky = [];
+
+
+
+
 
     // 마커 클러스터링
     var clusterer = new kakao.maps.MarkerClusterer({
@@ -312,50 +288,29 @@
             // 마커 표시
             displayMarker(locPosition);
 
+
+//추가부분 안넣음 my pjt 참고
             console.log('현재위치 위경도:', LatLng)
 
             weatherInfo()
             console.log('현재 위치 사용 후 공백 확인 : ', LatLng)
 
-
-
             //setTimeout(function() {
-               //clothRecommend()
+                //clothRecommend()
             //}, 2000);
-
        });
+
 
     }
     else
     {
+
         var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
             message = 'geolocation을 사용할 수 없어요'
+
         displayMarker(locPosition);
     }
 
-    $('clothes_submit').click(function(){
-        shirt_short = $('#shirt_short').is(':checked');
-        shirt_long = $('#shirt_long').is(':checked');
-        shirt_sweat = $('#shirt_sweat').is(':checked');
-        shirt = $('#shirt').is(':checked');
-        blous = $('#blous').is(':checked');
-        onepice = $('#onepice').is(':checked');
-        neet = $('#neet').is(':checked');
-        jeans = $('#jeans').is(':checked');
-        pants_winter = $('#pants_winter').is(':checked');
-        pants_summer = $('#pants_summer').is(':checked');
-        skert = $('#skert').is(':checked');
-        pants_cago = $('#pants_cago').is(':checked');
-        kardigun = $('#kardigun').is(':checked');
-        jumper = $('#jumper').is(':checked');
-        jacket = $('#jacket').is(':checked');
-        coat = $('#coat').is(':checked');
-        padding = $('#padding').is(':checked');
-            setTimeout(function() {
-                clothRecommend()
-            }, 2000);
-        }
-    );
 
     //----------------------------------------------------------
     $('#searchBtn').click(function () {
@@ -481,7 +436,7 @@
 
             })
 	    }
-        
+
 
         function video_info() {
          /*   alert('video_info()작동')*/
@@ -501,37 +456,44 @@
         }
 
 	    function clothRecommend() {
+		/*month 원래 위치 */
+	/*	alert(month);*/
+
 		//ajax
 
             $.ajax({
-                url: '../recommend_clothes/',
+                url: '../clothRecommend/',
                 type: 'post',
                 data: {
-                    //'csrfmiddlewaretoken' : '{{ csrf_token }}' ,
+                    'csrfmiddlewaretoken' : '{{ csrf_token }}' ,
                     month : month ,
-                    shirt_short : shirt_short,
-                    shirt_long : shirt_long,
-                    shirt_sweat : shirt_sweat,
-                    shirt : shirt,
-                    blous : blous,
-                    onepice : onepice,
-                    neet : neet,
-                    jeans : jeans,
-                    pants_winter : pants_winter,
-                    pants_summer : pants_summer,
-                    skert : skert,
-                    pants_cago : pants_cago,
-                    kardigun : kardigun,
-                    jumper : jumper,
-                    jacket : jacket,
-                    coat : coat,
-                    padding : padding
+
                 },
                 dataType : 'json',
+                success : function(lst) {
+                 /*   alert('call back success ^*^')
+
+                    $('#contents2').empty()
+                    var txt = ''
+                    //jquery each 함수
+                    //function 이하에서 index 배열의 인덱스 / 두번째 매개변수는 값
+                    $.each(lst, function(index, cloth) {
+                        txt += "<div><a href='../combination/'><img class='cloth' src='../static/img/4월_14일_2.jpg'></a></div>"
+                        txt += "<div><a href='../combination/'><img class='cloth' src='../static/img/4월_14일_3.jpg' style='margin-right:5px; margin-left:5px;'></a></div>"
+                        txt += "<div><a href='../combination/'><img class='cloth' src='../static/img/2월_3일.jpg'></a></div>"
+
+
+
+                    })
+                   alert(txt)
+                    //결과 다시 합쳐서 id=contents2에 html형식으로 출력
+                    $('#contents2').html(txt)
+*/
+
+                }
 
             })
 	    }
-
 
 </script>
 </body>

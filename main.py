@@ -12,5 +12,9 @@ def print_hi(name):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
+    test = {'A' : 'a', 'B' : ['b','c']}
+    print(test.get('B'))
+
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import *
 import csv
+from django.db.models import Q
+from django.http import QueryDict
 
 #비동기 통신 모듈
 from django.http    import JsonResponse
-
-#쿼리
-from django.http import QueryDict
-from django.db.models import Q
 
 # page 기능 도입
 from django.core.paginator import Paginator
@@ -18,7 +16,6 @@ import json
 import math
 from datetime import datetime, timedelta, date
 from urllib.parse import urlencode, quote_plus
-
 
 
 # Create your views here.
@@ -276,95 +273,6 @@ def clothRecommend(request) :
 
     return JsonResponse(response_json, safe=False)
 
-
-def recommend_clothes(request):
-    s_top  = request.POST.get('shirt_short')
-    print(">>>>>>>>>>>> ",s_top)
-
-
-    return render(request, 'recommend_clothes.html')
-def recommend_clothes2(request):
-
-    find_clo = str(request).split('?')
-    find_clothes = find_clo[1]
-    find_clothes = find_clothes[:-2]
-    find_dic = QueryDict(find_clothes)
-
-    if request.method == 'GET':
-        s_top = find_dic.getlist('select_top')
-        s_bottom = find_dic.getlist('select_bottom')
-        s_outer = find_dic.getlist('select_outer')
-
-        if s_top ==0 and s_bottom==0 and s_outer==0:
-            selects = CLOTHES_INFO.objects.all()
-        else :
-            final_query = Q()
-            s_top_query = Q()
-            if s_top :
-                for find_item in s_top:
-                    find_item ="CLOTHES_"+find_item.upper()
-
-                    if find_item == 'CLOTHES_SHIRT_SHORT':
-                        s_top_query |= Q(CLOTHES_SHIRT_SHORT =1)
-                    elif find_item == 'CLOTHES_SHIRT_LONG':
-                        s_top_query |= Q(CLOTHES_SHIRT_LONG =1)
-                    elif find_item == 'CLOTHES_SHIRT_SWEAT':
-                        s_top_query |= Q(CLOTHES_SHIRT_SWEAT=1)
-                    elif find_item == 'CLOTHES_SWEATER':
-                        s_top_query |= Q(CLOTHES_SWEATER=1)
-                    elif find_item == 'CLOTHES_SHIRT':
-                        s_top_query |= Q(CLOTHES_SHIRT=1)
-                    elif find_item == 'CLOTHES_BLOUS':
-                        s_top_query |= Q(CLOTHES_BLOUS=1)
-                    elif find_item == 'CLOTHES_ONEPICE':
-                        s_top_query |= Q(CLOTHES_ONEPICE=1)
-                    elif find_item == 'CLOTHES_NEET':
-                        s_top_query |= Q(CLOTHES_NEET=1)
-
-            s_bottom_query = Q()
-            if s_bottom :
-                for find_item in s_bottom:
-                    find_item ="CLOTHES_"+find_item.upper()
-
-                    if find_item == 'CLOTHES_JEANS':
-                        s_bottom_query |= Q(CLOTHES_JEANS =1)
-                    elif find_item == 'CLOTHES_PANTS_WINTER':
-                        s_bottom_query |= Q(CLOTHES_PANTS_WINTER =1)
-                    elif find_item == 'CLOTHES_PANTS_SUMMER':
-                        s_bottom_query |= Q(CLOTHES_PANTS_SUMMER=1)
-                    elif find_item == 'CLOTHES_SKERT':
-                        s_bottom_query |= Q(CLOTHES_SKERT=1)
-                    elif find_item == 'CLOTHES_PANTS_CAGO':
-                        s_bottom_query |= Q(CLOTHES_PANTS_CAGO=1)
-
-            s_outer_query = Q()
-            if s_outer:
-                for find_item in s_outer:
-                    find_item = "CLOTHES_" + find_item.upper()
-                    if find_item == 'CLOTHES_KARDIGUN':
-                        s_outer_query |= Q(CLOTHES_KARDIGUN=1)
-                    elif find_item == 'CLOTHES_JUMPER':
-                        s_outer_query |= Q(CLOTHES_JUMPER=1)
-                    elif find_item == 'CLOTHES_JACKET':
-                        s_outer_query |= Q(CLOTHES_JACKET=1)
-                    elif find_item == 'CLOTHES_COAT':
-                        s_outer_query |= Q(CLOTHES_COAT=1)
-                    elif find_item == 'CLOTHES_PADDING':
-                        s_outer_query |= Q(CLOTHES_PADDING=1)
-
-            final_query &= s_top_query
-            final_query &= s_bottom_query
-            final_query &= s_outer_query
-            print(final_query)
-            selects = CLOTHES_INFO.objects.filter(final_query)
-
-        paginator = Paginator(selects, 9)
-        page = request.GET.get('page')
-        select_list = paginator.get_page(page)
-        context = {'selects': select_list}
-
-        return render(request, 'recommend_clothes.html', context)
-
 def combination(request) :
     print(">>>>>> debug client path: combination/ combination() render yIndex.html")
 
@@ -378,6 +286,58 @@ def combination(request) :
 
     return render(request, 'yIndex.html', context)
 
+
+def recommend_clothes(request):
+    want_clothes = QueryDict(str(request)[:-2])
+    print(type(want_clothes))
+
+    final_query = Q()
+
+    top_query = Q()
+    if 'select_top' in want_clothes :
+        item_list = want_clothes.getlist('select_top')
+        for item in item_list :
+            if item == 'shirt_short' : top_query |= Q(CLOTHES_SHIRT_SHORT =1)
+            if item == 'shirt_long': top_query |= Q(CLOTHES_SHIRT_LONG=1)
+            if item == 'shirt_sweat': top_query |= Q(CLOTHES_SHIRT_SWEAT=1)
+            if item == 'shirt': top_query |= Q(CLOTHES_SHIRT=1)
+            if item == 'blous': top_query |= Q(CLOTHES_BLOUS=1)
+            if item == 'onepice': top_query |= Q(CLOTHES_ONEPICE=1)
+            if item == 'neet': top_query |= Q(CLOTHES_NEET=1)
+
+    bottom_query = Q()
+    if 'select_bottom' in want_clothes :
+        item_list = want_clothes.getlist('select_bottom')
+        for item in item_list:
+            if item == 'jeans': bottom_query |= Q(CLOTHES_JEANS=1)
+            if item == 'pants_winter': bottom_query |= Q(CLOTHES_PANTS_WINTER=1)
+            if item == 'pants_summer': bottom_query |= Q(CLOTHES_PANTS_SUMMER=1)
+            if item == 'skert': bottom_query |= Q(CLOTHES_SKERT=1)
+            if item == 'pants_cago': bottom_query |= Q(CLOTHES_PANTS_CAGO=1)
+
+    outer_query = Q()
+    if 'select_outer' in want_clothes :
+        item_list = want_clothes.getlist('select_outer')
+        for item in item_list:
+            if item == 'kardigun': outer_query |= Q(CLOTHES_KARDIGUN=1)
+            if item == 'jumper': outer_query |= Q(CLOTHES_JUMPER=1)
+            if item == 'jacket': outer_query |= Q(CLOTHES_JACKET=1)
+            if item == 'coat': outer_query |= Q(CLOTHES_COAT=1)
+            if item == 'padding': outer_query |= Q(CLOTHES_PADDING=1)
+
+    final_query &= top_query
+    final_query &= bottom_query
+    final_query &= outer_query
+
+    selects = CLOTHES_INFO.objects.filter(final_query)
+
+    paginator = Paginator(selects, 9)
+    page = int(request.GET.get('page', 1))
+    select_list = paginator.get_page(page)
+
+    context = {'selects': select_list}
+
+    return render(request, 'recommend_clothes.html', context)
 
 # 데이터 삽입 부분
 def clothes_insert(request):
