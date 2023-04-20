@@ -3,6 +3,7 @@ from .models import *
 import csv
 from django.db.models import Q
 from django.http import QueryDict
+from math import ceil
 
 #비동기 통신 모듈
 from django.http    import JsonResponse
@@ -43,7 +44,6 @@ def main(request) :
 def login(request) :
     print(">>>>>> debug client path : login/ login(), render home.html")
     id  = request.POST['login_id']
-
     pwd = request.POST['login_password']
 
     print(">>>>>> debug, params ", id, pwd)
@@ -288,6 +288,8 @@ def combination(request) :
 
 
 def recommend_clothes(request):
+    #https://velog.io/@jewon119/Django-%EA%B8%B0%EC%B4%88-ListView
+
     want_clothes = QueryDict(str(request)[:-2])
     print(type(want_clothes))
 
@@ -331,12 +333,9 @@ def recommend_clothes(request):
 
     selects = CLOTHES_INFO.objects.filter(final_query)
 
-    paginator = Paginator(selects, 9)
-    page = int(request.GET.get('page', 1))
-    select_list = paginator.get_page(page)
-
-    context = {'selects': select_list}
-
+    context = {
+        "data": selects
+    }
     return render(request, 'recommend_clothes.html', context)
 
 # 데이터 삽입 부분
