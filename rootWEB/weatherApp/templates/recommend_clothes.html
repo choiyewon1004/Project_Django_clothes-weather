@@ -16,7 +16,6 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles_d.css' %}" rel="stylesheet" />
        <style>
@@ -25,8 +24,8 @@
             grid-template-columns: 1fr 1fr 1fr;
         }
         .container{
-            background-color : white;
-            border-radius: 20px;
+        background-color : white;
+        border-radius: 20px;
         </style>
     </head>
 
@@ -34,37 +33,73 @@
     <body>
         <!-- Background Video-->
         <video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop"><source src="{% static 'assets/mp4/bg.mp4' %}" type="video/mp4" /></video>
-
         <!-- Masthead-->
         <div class="masthead" align = "center">
             <div class="masthead-content text-white" align = "center">
                 <div class="container-fluid px-4 px-lg-0" align = "center">
                     <!--<div class = "layout01"> -->
-                    <h1 style="text-align:center;"class="lh-1 mb-4">오늘의 추천 코디</h1>
-                    <div class="box-body">
-                        <div class = "container">
-                            <div style="display : flex"; justify-content : center; align-items : center;>
-                                <div style="width : 100%; height : 100%;">
-                                    <tbody id="tbody">
-                                    {% for select in data %}
-                                    <tr class="profile" style="width:280px;height:300px;">
-                                        <td><img src="{{select.CLOTHES_PNG}}" style="width:200px; height:267px;margin-bottom:3px; margin-top:3px; border-radius:10px;"></td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
+                     <h1 style="text-align:center;"class="lh-1 mb-4">오늘의 코디</h1>
+                        <div class="box-body">
+                            <div class = "container">
+                                <div style="display : flex"; justify-content : center; align-items : center;>
+                                    <div style="width : 100%; height : 100%;">
+                                        <tbody id="tbody">
+                                        {% for select in selects %}
+                                        <tr class="profile" style="width:200px;height:300px;">
+                                            <td><img src="{{select.CLOTHES_PNG}}" style="width:180px; height:267px;margin-bottom:3px; margin-top:3px; border-radius:10px;"></td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div style="text-align:center">
+                            <div id="grid">
+
+                            <div>
+                                {% if selects.has_previous %}
+                                <a class="abutton" href="?page=1" style="color:white;">맨 앞으로</a>
+                                <a class="abutton" style="color:white;" href="?page{{ selects.previous_page_number }}">이전</a>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                            {% for page in selects.paginator.page_range %}
+                            {% if page >= selects.number|add:-2 and page <= selects.number|add:2 %}
+                            <span class="{% if page == selects.number %}current{% endif %}">
+                                <a href="?page={{ page }}" style="color:white;">{{ page }}</a>
+                            </span>
+                            {% elif page >= selects.number|add:-3 and page <= selects.number|add:3 %}
+                            ..
+                            {% endif %}
+                            {% endfor %}
+                            </div>
+
+                            <div>
+                                {% if selects.has_next %}
+                                <a class="abutton" style="color:white;" href="?page={{ selects.next_page_number}}">다음</a>
+                                <a class="abutton" style="color:white;" href="?page={{ selects.paginator.num_pages }}">맨 뒤로</a>
+                                {% endif %}
+
+                            </div>
+                            </div>
+                            </div>
+
+                            </div>
+                            </form>
+
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
 
+
         <!-- Social Icons-->
         <!-- For more icon options, visit https://fontawesome.com/icons?d=gallery&p=2&s=brands-->
-        <div class="social-icons" style = "position:fixed;">
+        <div class="social-icons"  style="position: fixed; ">>
             <div class="d-flex flex-row flex-lg-column justify-content-center align-items-center h-100 mt-3 mt-lg-0">
-                <a class="btn btn-dark m-3" href=".."><i class="bi bi-house-door-fill"></i></a>
+                <a class="btn btn-dark m-3" href="../"><i class="bi bi-house-door-fill"></i></a>
                 <a class="btn btn-dark m-3" href="../logout/"><i class="bi bi-box-arrow-right"></i></a>
                 <a class="btn btn-dark m-3" href="#"><i class="bi bi-chevron-double-up"></i></a>
             </div>
@@ -77,5 +112,15 @@
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script>
+        $(document).ready(function() {
+        $( "select[name=month]" ).val( "{{ month_text }}" );
+        $('select[name=month]').change(function () {
+        console.log($('select[name=month]').val());
+        month = $('select[name=month]').val();
+        $('.form').submit();
+    });
+});
+    </script>
     </body>
 </html>

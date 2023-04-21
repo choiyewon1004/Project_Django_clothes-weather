@@ -333,9 +333,9 @@ def recommend_clothes(request):
 
     selects = CLOTHES_INFO.objects.filter(final_query)
 
-    context = {
-        "data": selects
-    }
+
+    context = {'selects': selects}
+
     return render(request, 'recommend_clothes.html', context)
 
 # 데이터 삽입 부분
